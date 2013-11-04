@@ -1,6 +1,8 @@
 package com.almeros.android.multitouch.model;
 
-
+/**
+ * @author captain_miao
+ */
 public class SeatMo extends BaseMo {
 
     /**

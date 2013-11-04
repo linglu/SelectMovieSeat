@@ -1,6 +1,7 @@
 package com.almeros.android.multitouch;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -12,6 +13,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,14 +42,29 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
     private SeatMo[][] seatTable;
 
     public List<SeatMo> selectedSeats;// 保存选中座位
-	@Override
+
+    private int screenWidth;
+    private int minLeft;
+    private int minTop;
+    private int defWidth;
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+        Resources resources = getResources();
+        screenWidth = resources.getDisplayMetrics().widthPixels;
+        defWidth = resources.getDimensionPixelSize(R.dimen.padding_20dp);
+
         initSeatTable();
         selectedSeats = new ArrayList<SeatMo>();
         seatTableView = (SeatTableView) findViewById(R.id.seatviewcont);
         rowView = (LinearLayout) findViewById(R.id.seatraw);
+        //设置透明度
+        AlphaAnimation alpha = new AlphaAnimation(0.8F, 0.8F);
+        alpha.setDuration(0); // Make animation instant
+        alpha.setFillAfter(true); // Tell it to persist after the animation ends
+        rowView.startAnimation(alpha);
 
         //居中线的画笔
         Paint paint = new Paint();
@@ -62,8 +79,7 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
         seatTableView.setColumnSize(seatTable[0].length);
         seatTableView.setOnTouchListener(this);
         seatTableView.setLinePaint(paint);
-        seatTableView.setDefWidth(40);
-        seatTableView.invalidate();
+        seatTableView.setDefWidth(defWidth);
         onChanged();
 
 		// Setup Gesture Detectors
@@ -94,7 +110,7 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
                     if (seatTable[i][j].status == 1) {
                         seatTable[i][j].status = 2;
                         selectedSeats.add(seatTable[i][j]);
-                        Toast.makeText(this,seatTable[i][j].seatName, Toast.LENGTH_LONG ).show();
+                        Toast.makeText(this,seatTable[i][j].seatName, Toast.LENGTH_SHORT ).show();
                     } else {
                         seatTable[i][j].status = 1;
                         selectedSeats.remove(seatTable[i][j]);
@@ -109,6 +125,14 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
 
         mMatrix.reset();
         mMatrix.postScale(mScaleFactor, mScaleFactor);
+        //限定移动区域
+        minLeft = (int)(defWidth * mScaleFactor * seatTable[0].length) - screenWidth;
+        mFocusX = minLeft > 0 ?
+                Math.max(-minLeft, Math.min(mFocusX, defWidth * mScaleFactor))
+                : Math.max(0, Math.min(mFocusX, defWidth * mScaleFactor));
+
+        minTop = (int)(defWidth * mScaleFactor * seatTable.length) - seatTableView.getMeasuredHeight() ;
+        mFocusY = minTop > 0 ? Math.max(-minTop, Math.min(mFocusY, 0)) : 0;
 
         seatTableView.mScaleFactor = mScaleFactor;
         seatTableView.mPosX = mFocusX;
@@ -129,9 +153,11 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
             textView.setText(seatTable[i][0].rowName);
             textView.setTextSize(9.0f * mScaleFactor);
             textView.setTextColor(Color.LTGRAY);
-            textView.setGravity(Gravity.CENTER_VERTICAL);
+            textView.setGravity(Gravity.CENTER);
             textView.setLayoutParams(new ViewGroup.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, seatTableView.getSeatWidth()));
+                    LinearLayout.LayoutParams.WRAP_CONTENT, (int)(defWidth * mScaleFactor)));
+            textView.setPadding(getResources().getDimensionPixelSize(R.dimen.padding_2dp), 0,
+                    getResources().getDimensionPixelSize(R.dimen.padding_2dp), 0);
             rowView.addView(textView);
         }
     }
@@ -151,9 +177,9 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
 		@Override
 		public boolean onMove(MoveGestureDetector detector) {
 			PointF d = detector.getFocusDelta();
+            eatClick = d.x > 1 || d.y > 1;
 			mFocusX += d.x;
 			mFocusY += d.y;
-            eatClick = d.x > 1 || d.y > 1;
 
 			return true;
 		}
@@ -162,9 +188,9 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
 
 
     private void initSeatTable() {
-        seatTable = new SeatMo[20][15];// mock data
+        seatTable = new SeatMo[20][16];// mock data
         for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 15; j++) {
+            for (int j = 0; j < 16; j++) {
                 SeatMo seat = new SeatMo();
                 seat.row = i;
                 seat.column = j;

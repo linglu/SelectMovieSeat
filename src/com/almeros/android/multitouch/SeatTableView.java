@@ -55,12 +55,6 @@ public class SeatTableView extends View {
 
     }
 
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension((int) (defWidth * mScaleFactor) * columnSize +  (int)mPosX,
-                (int) (defWidth * mScaleFactor) * rowSize + (int)mPosY);
-    }
-
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if(defWidth < 10) {
@@ -83,13 +77,8 @@ public class SeatTableView extends View {
             for (int j = 0; j < columnSize; j++) {
                 //绘制中线,座位间隔由图片来做,简化处理
                 if (linePaint != null) {
-                    if ((columnSize % 2 == 0 && j == columnSize / 2)) {
-                        canvas.drawLine((j * (seatWidth)) + mPosX - linePaint.getStrokeWidth() / 2, i * (seatWidth) + +mPosY,
-                                (j * (seatWidth)) + mPosX, i * (seatWidth) + seatWidth + mPosY, linePaint);
-                    } else if (columnSize % 2 == 1 && j - 1 == columnSize / 2) {
-                        canvas.drawLine((j * (seatWidth)) + mPosX, i * (seatWidth) + +mPosY,
-                                (j * (seatWidth)) + mPosX, i * (seatWidth) + seatWidth + mPosY, linePaint);
-                    }
+                    canvas.drawLine((columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + mPosY,
+                            (columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + seatWidth + mPosY, linePaint);
                 }
 
 

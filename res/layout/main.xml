@@ -2,14 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/stars" >
-
+    android:background="@color/foreground_dark" >
+    <TextView
+        android:id="@+id/tv_cinema_screen"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/padding_100dp"
+        android:text="@string/cinema_screen"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center" />
 
     <com.almeros.android.multitouch.SeatTableView
         android:id="@+id/seatviewcont"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="10dip"
+        android:layout_below="@+id/tv_cinema_screen"
         android:paddingLeft="10dip"
         android:paddingRight="10dip" >
     </com.almeros.android.multitouch.SeatTableView>
@@ -17,9 +24,9 @@
         android:id="@+id/seatraw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:background="@android:color/black"
         android:orientation="vertical"
-        android:gravity="left">
+        android:layout_below="@+id/tv_cinema_screen">
     </LinearLayout>
 
 </RelativeLayout>
