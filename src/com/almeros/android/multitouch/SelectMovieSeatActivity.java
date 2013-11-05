@@ -61,7 +61,7 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
         seatTableView = (SeatTableView) findViewById(R.id.seatviewcont);
         rowView = (LinearLayout) findViewById(R.id.seatraw);
         //设置透明度
-        AlphaAnimation alpha = new AlphaAnimation(0.8F, 0.8F);
+        AlphaAnimation alpha = new AlphaAnimation(0.5F, 0.5F);
         alpha.setDuration(0); // Make animation instant
         alpha.setFillAfter(true); // Tell it to persist after the animation ends
         rowView.startAnimation(alpha);
@@ -150,7 +150,13 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
                 (int) (mFocusY), 0, 0);//上下移动
         for (int i = 0; i < seatTableView.getRowSize(); i++) {
             TextView textView = new TextView(SelectMovieSeatActivity.this);
-            textView.setText(seatTable[i][0].rowName);
+            //座位有可能为空
+            for (int j = 0; j < seatTableView.getColumnSize(); j++) {
+                if (seatTable[i][j] != null) {
+                    textView.setText(seatTable[i][j].rowName);
+                    break;
+                }
+            }
             textView.setTextSize(9.0f * mScaleFactor);
             textView.setTextColor(Color.LTGRAY);
             textView.setGravity(Gravity.CENTER);
@@ -196,8 +202,8 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
                 seat.column = j;
                 seat.rowName = String.valueOf((char)('A' + i));
                 seat.seatName = seat.rowName + "排" + (j + 1) + "座";
-                seat.status = randInt(-1, 1);
-                seatTable[i][j] = seat;
+                seat.status = randInt(-2, 1);//假设-2为空座位
+                seatTable[i][j] = seat.status == -2 ? null : seat;
             }
         }
     }
@@ -221,6 +227,7 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
                         && currentXPosition < j * area + area
                         && (i * area) < currentYPosition
                         && currentYPosition < i * area + area
+                        && seatTable[i][j] != null
                         && seatTable[i][j].status >= 1) {//1 和 2  才能被点击
 
                     return new int[]{i, j};

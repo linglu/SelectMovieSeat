@@ -74,34 +74,35 @@ public class SeatTableView extends View {
         // 画座位
         for (int i = 0; i < rowSize; i++) {
 
+            //绘制中线,座位间隔由图片来做,简化处理
+            if (linePaint != null) {
+                canvas.drawLine((columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + mPosY,
+                        (columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + seatWidth + mPosY, linePaint);
+            }
             for (int j = 0; j < columnSize; j++) {
-                //绘制中线,座位间隔由图片来做,简化处理
-                if (linePaint != null) {
-                    canvas.drawLine((columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + mPosY,
-                            (columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + seatWidth + mPosY, linePaint);
-                }
 
+                if (seatTable[i][j] != null) {
+                    switch (seatTable[i][j].status) {
+                        case -1:
+                        case 0: {
+                            canvas.drawBitmap(seat_sold, j * (seatWidth) + mPosX, i * (seatWidth) + mPosY, null);
+                            break;
+                        }
+                        case 1: {
+                            canvas.drawBitmap(seat_sale, j * (seatWidth) + mPosX, i * (seatWidth) + mPosY, null);
+                            break;
+                        }
+                        case 2: {
+                            canvas.drawBitmap(seat_selected, j * (seatWidth) + mPosX, i * (seatWidth) + mPosY, null);
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
 
-                switch ( seatTable[i][j].status ){
-                    case 0: {
-                        canvas.drawBitmap(seat_sold, j * (seatWidth) + mPosX, i * (seatWidth) + mPosY, null);
-                        break;
-                    }
-                    case 1: {
-                        canvas.drawBitmap(seat_sale, j * (seatWidth) + mPosX, i * (seatWidth) + mPosY, null);
-                        break;
-                    }
-                    case 2: {
-                        canvas.drawBitmap(seat_selected, j * (seatWidth) + mPosX, i * (seatWidth) + mPosY, null);
-                        break;
-                    }
-                    default:{
-                        canvas.drawBitmap(seat_sold, j * (seatWidth) + mPosX, i * (seatWidth) + mPosY, null);
-                        break;
                     }
 
                 }
-
             }
         }
 
