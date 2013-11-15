@@ -76,20 +76,20 @@ public class SeatTableView extends View {
 
         // 画座位
         for (int i = 0; i < rowSize; i++) {
-//            if (i * (seatWidth) + mPosY < -seatWidth || i * (seatWidth) + mPosY > height+seatWidth) {
-//                //Log.d("", "don't draw row, break..." + i);
-//                continue;
-//            }
+            if (i * (seatWidth) + mPosY < -seatWidth || i * (seatWidth) + mPosY > height+seatWidth) {
+                //Log.d("", "don't draw row, break..." + i);
+                continue;
+            }
             //绘制中线,座位间隔由图片来做,简化处理
             if (linePaint != null) {
                 canvas.drawLine((columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + mPosY,
                         (columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + seatWidth + mPosY, linePaint);
             }
             for (int j = 0; j < columnSize; j++) {
-//                if (j * (seatWidth) + mPosX < -seatWidth || j * (seatWidth) + mPosX > width +  seatWidth) {
-//                    //Log.d("", "don't draw, break..." + i + ", " + j);
-//                    continue;
-//                }
+                if (j * (seatWidth) + mPosX < -seatWidth || j * (seatWidth) + mPosX > width +  seatWidth) {
+                    //Log.d("", "don't draw, break..." + i + ", " + j);
+                    continue;
+                }
 
                 if (seatTable[i][j] != null) {
                     switch (seatTable[i][j].status) {
