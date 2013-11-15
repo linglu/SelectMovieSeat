@@ -1,4 +1,4 @@
-package com.almeros.android.multitouch.gesturedetectors;
+package com.dahuo.android.cinema.gesturedetectors;
 
 import android.content.Context;
 import android.graphics.PointF;

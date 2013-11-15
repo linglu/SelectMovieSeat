@@ -12,19 +12,19 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center" />
 
-    <com.almeros.android.multitouch.SeatTableView
+    <com.dahuo.android.cinema.SeatTableView
         android:id="@+id/seatviewcont"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tv_cinema_screen"
         android:paddingLeft="10dip"
         android:paddingRight="10dip" >
-    </com.almeros.android.multitouch.SeatTableView>
+    </com.dahuo.android.cinema.SeatTableView>
     <LinearLayout
         android:id="@+id/seatraw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/black"
+        android:background="@color/trans_black"
         android:orientation="vertical"
         android:layout_below="@+id/tv_cinema_screen">
     </LinearLayout>

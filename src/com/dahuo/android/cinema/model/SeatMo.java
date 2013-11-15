@@ -1,4 +1,4 @@
-package com.almeros.android.multitouch.model;
+package com.dahuo.android.cinema.model;
 
 /**
  * @author captain_miao

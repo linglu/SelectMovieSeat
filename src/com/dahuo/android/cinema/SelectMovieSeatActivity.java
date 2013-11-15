@@ -1,4 +1,4 @@
-package com.almeros.android.multitouch;
+package com.dahuo.android.cinema;
 
 import android.app.Activity;
 import android.content.res.Resources;
@@ -18,8 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.almeros.android.multitouch.gesturedetectors.MoveGestureDetector;
-import com.almeros.android.multitouch.model.SeatMo;
+import com.dahuo.android.cinema.gesturedetectors.MoveGestureDetector;
+import com.dahuo.android.cinema.model.SeatMo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +47,7 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
     private int minLeft;
     private int minTop;
     private int defWidth;
+    private AlphaAnimation alpha;
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,10 +62,10 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
         seatTableView = (SeatTableView) findViewById(R.id.seatviewcont);
         rowView = (LinearLayout) findViewById(R.id.seatraw);
         //设置透明度
-        AlphaAnimation alpha = new AlphaAnimation(0.5F, 0.5F);
+        alpha = new AlphaAnimation(0.6F, 0.6F);
         alpha.setDuration(0); // Make animation instant
         alpha.setFillAfter(true); // Tell it to persist after the animation ends
-        rowView.startAnimation(alpha);
+
 
         //居中线的画笔
         Paint paint = new Paint();
@@ -75,8 +76,8 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
         paint.setStrokeJoin(Paint.Join.ROUND);
 
         seatTableView.setSeatTable(seatTable);
-        seatTableView.setRowSize(seatTable.length);
-        seatTableView.setColumnSize(seatTable[0].length);
+        seatTableView.setRowSize(maxRow);
+        seatTableView.setColumnSize(maxColumn);
         seatTableView.setOnTouchListener(this);
         seatTableView.setLinePaint(paint);
         seatTableView.setDefWidth(defWidth);
@@ -126,12 +127,12 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
         mMatrix.reset();
         mMatrix.postScale(mScaleFactor, mScaleFactor);
         //限定移动区域
-        minLeft = (int)(defWidth * mScaleFactor * seatTable[0].length) - screenWidth;
+        minLeft = (int)(defWidth * mScaleFactor * maxColumn) - screenWidth;
         mFocusX = minLeft > 0 ?
                 Math.max(-minLeft, Math.min(mFocusX, defWidth * mScaleFactor))
                 : Math.max(0, Math.min(mFocusX, defWidth * mScaleFactor));
 
-        minTop = (int)(defWidth * mScaleFactor * seatTable.length) - seatTableView.getMeasuredHeight() ;
+        minTop = (int)(defWidth * mScaleFactor * maxRow) - seatTableView.getMeasuredHeight();
         mFocusY = minTop > 0 ? Math.max(-minTop, Math.min(mFocusY, 0)) : 0;
 
         seatTableView.mScaleFactor = mScaleFactor;
@@ -148,6 +149,8 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
         rowView.removeAllViews();
         rowView.setPadding(getResources().getDimensionPixelSize(R.dimen.padding_1dp),
                 (int) (mFocusY), 0, 0);//上下移动
+        //rowView.setBackgroundColor(getResources().getColor(R.color.black));
+//        rowView.startAnimation(alpha);
         for (int i = 0; i < seatTableView.getRowSize(); i++) {
             TextView textView = new TextView(SelectMovieSeatActivity.this);
             //座位有可能为空
@@ -157,7 +160,7 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
                     break;
                 }
             }
-            textView.setTextSize(9.0f * mScaleFactor);
+            textView.setTextSize(8.0f * mScaleFactor);
             textView.setTextColor(Color.LTGRAY);
             textView.setGravity(Gravity.CENTER);
             textView.setLayoutParams(new ViewGroup.LayoutParams(
@@ -172,7 +175,7 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
 		@Override
 		public boolean onScale(ScaleGestureDetector detector) {
 			mScaleFactor *= detector.getScaleFactor(); // scale change since previous event
-			mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 10.0f));
+			mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 6.0f));
 
 			return true;
 		}
@@ -189,14 +192,15 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
 
 			return true;
 		}
-	}		
-	
+	}
 
 
+    private int maxRow = 100;
+    private int maxColumn = 100;
     private void initSeatTable() {
-        seatTable = new SeatMo[20][16];// mock data
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 16; j++) {
+        seatTable = new SeatMo[maxRow][maxColumn];// mock data
+        for (int i = 0; i < maxRow; i++) {
+            for (int j = 0; j < maxColumn; j++) {
                 SeatMo seat = new SeatMo();
                 seat.row = i;
                 seat.column = j;

@@ -1,4 +1,4 @@
-package com.almeros.android.multitouch;
+package com.dahuo.android.cinema;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.almeros.android.multitouch.model.SeatMo;
+import com.dahuo.android.cinema.model.SeatMo;
 
 /**
  * @author captain_miao
@@ -32,7 +32,8 @@ public class SeatTableView extends View {
 
     private Paint linePaint;//中央线的绘制
 
-
+    int width;
+    int height;
 
     public SeatTableView(Context context) {
         super(context, null);
@@ -57,11 +58,13 @@ public class SeatTableView extends View {
 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        //只绘制可见的座位图
         if(defWidth < 10) {
             throw new IllegalArgumentException("the width must > 10, the value is " + defWidth);
         }
         seatWidth = (int) (defWidth * mScaleFactor);
-        seatWidth = (int) (defWidth * mScaleFactor);
+        width = getMeasuredWidth();
+        height = getMeasuredHeight();
 
 
         // 可购买座位
@@ -73,13 +76,20 @@ public class SeatTableView extends View {
 
         // 画座位
         for (int i = 0; i < rowSize; i++) {
-
+//            if (i * (seatWidth) + mPosY < -seatWidth || i * (seatWidth) + mPosY > height+seatWidth) {
+//                //Log.d("", "don't draw row, break..." + i);
+//                continue;
+//            }
             //绘制中线,座位间隔由图片来做,简化处理
             if (linePaint != null) {
                 canvas.drawLine((columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + mPosY,
                         (columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + seatWidth + mPosY, linePaint);
             }
             for (int j = 0; j < columnSize; j++) {
+//                if (j * (seatWidth) + mPosX < -seatWidth || j * (seatWidth) + mPosX > width +  seatWidth) {
+//                    //Log.d("", "don't draw, break..." + i + ", " + j);
+//                    continue;
+//                }
 
                 if (seatTable[i][j] != null) {
                     switch (seatTable[i][j].status) {
