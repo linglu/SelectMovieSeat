@@ -195,7 +195,7 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
 	}
 
 
-    private int maxRow = 60;
+    private int maxRow = 26;
     private int maxColumn = 60;
     private void initSeatTable() {
         seatTable = new SeatMo[maxRow][maxColumn];// mock data
