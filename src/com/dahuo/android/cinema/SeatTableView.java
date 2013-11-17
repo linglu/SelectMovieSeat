@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.dahuo.android.cinema.model.SeatMo;
@@ -76,8 +77,8 @@ public class SeatTableView extends View {
 
         // 画座位
         for (int i = 0; i < rowSize; i++) {
+            //屏幕外,完整的行都不绘制
             if (i * (seatWidth) + mPosY < -seatWidth || i * (seatWidth) + mPosY > height+seatWidth) {
-                //Log.d("", "don't draw row, break..." + i);
                 continue;
             }
             //绘制中线,座位间隔由图片来做,简化处理
@@ -85,11 +86,10 @@ public class SeatTableView extends View {
                 canvas.drawLine((columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + mPosY,
                         (columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + seatWidth + mPosY, linePaint);
             }
-            for (int j = 0; j < columnSize; j++) {
-                if (j * (seatWidth) + mPosX < -seatWidth || j * (seatWidth) + mPosX > width +  seatWidth) {
-                    //Log.d("", "don't draw, break..." + i + ", " + j);
-                    continue;
-                }
+            int k = (int)(mPosX + seatWidth + 0.5f);
+            k = k > 0 ? 0 : -k / seatWidth;//移动距离不可能出现移到-rowSize
+            int l = Math.min(columnSize - 1, k + (width / seatWidth) + 2);//多显示1列,避免临界的突然消失的现象
+            for (int j = k; j <= l; j++) {
 
                 if (seatTable[i][j] != null) {
                     switch (seatTable[i][j].status) {
