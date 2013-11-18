@@ -8,13 +8,13 @@ SelectMovieSeat
 SelectSeatView：https://github.com/twl8023/SelectSeatView/
 
 功能：
-1. 显示座位图
-2. 可缩放
-3. 可移动
-4. 可选座
-5. 左侧显示座位排号
-6. 中间线
-7. 只绘制可见的座位图
+1. 显示座位图<br>
+2. 可缩放<br>
+3. 可移动<br>
+4. 可选座<br>
+5. 左侧显示座位排号<br>
+6. 中间线<br>
+7. 只绘制可见的座位图<br>
 
 
 
