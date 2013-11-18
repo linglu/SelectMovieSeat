@@ -7,7 +7,7 @@ SelectMovieSeat
 多点缩放移动：https://github.com/Almeros/android-gesture-detectors
 SelectSeatView：https://github.com/twl8023/SelectSeatView/
 
-功能：
+功能：<br>
 1. 显示座位图<br>
 2. 可缩放<br>
 3. 可移动<br>
