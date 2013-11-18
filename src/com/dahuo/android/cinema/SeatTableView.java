@@ -76,11 +76,10 @@ public class SeatTableView extends View {
         seat_selected = Bitmap.createScaledBitmap(SeatSelected, seatWidth, seatWidth, true);
 
         // 画座位
-        for (int i = 0; i < rowSize; i++) {
-            //屏幕外,完整的行都不绘制
-            if (i * (seatWidth) + mPosY < -seatWidth || i * (seatWidth) + mPosY > height+seatWidth) {
-                continue;
-            }
+        int m = (int)(mPosY + seatWidth);
+        m = m >= 0 ? 0 : -m / seatWidth;
+        int n = Math.min(rowSize - 1, m + (height / seatWidth) + 2);//两边多显示1列,避免临界的突然消失的现象
+        for (int i = m; i <= n; i++) {
             //绘制中线,座位间隔由图片来做,简化处理
             if (linePaint != null) {
                 canvas.drawLine((columnSize * seatWidth) / 2 + mPosX, i * (seatWidth) + mPosY,
@@ -88,7 +87,7 @@ public class SeatTableView extends View {
             }
             int k = (int)(mPosX + seatWidth + 0.5f);
             k = k > 0 ? 0 : -k / seatWidth;//移动距离不可能出现移到-rowSize
-            int l = Math.min(columnSize - 1, k + (width / seatWidth) + 2);//多显示1列,避免临界的突然消失的现象
+            int l = Math.min(columnSize - 1, k + (width / seatWidth) + 2);//两边多显示1列,避免临界的突然消失的现象
             for (int j = k; j <= l; j++) {
 
                 if (seatTable[i][j] != null) {
