@@ -15,7 +15,7 @@ SelectSeatView：https://github.com/twl8023/SelectSeatView/
 5. 左侧显示座位排号<br>
 6. 中间线<br>
 7. 只绘制可见的座位图<br>
-8. todo
+8. todo 缩放比率
 
 
 使用方法：http://nobugs.sinaapp.com/?p=824
