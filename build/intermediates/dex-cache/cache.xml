@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/captain_miao/AndroidStudioProjects/SelectMovieSeat1/app/build/intermediates/exploded-aar/com.github.Almeros/android-gesture-detectors/1ffb8444ee/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="0533696cc18201a9790610e445aa4b7b297f5cc5">
+        <dex dex="/Users/captain_miao/AndroidStudioProjects/SelectMovieSeat1/app/build/intermediates/pre-dexed/debug/classes-b8ab255aa0c7ddbb3ed8de0a520e05eda33ae178.jar" />
+    </item>
+
+</items>
