@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -31,10 +32,14 @@ import static android.graphics.Bitmap.createScaledBitmap;
  * @author YanLu
  */
 public class SelectMovieSeatActivity extends Activity implements OnTouchListener {
-	private Matrix mMatrix = new Matrix();
+    private final static String TAG = SelectMovieSeatActivity.class.getSimpleName();
+    private Matrix mMatrix = new Matrix();
+    private float mPreScaleFactor = 1.0f;
     private float mScaleFactor = 1.0f;
+    private float mPreFocusX = 0.f;
     private float mFocusX = 0.f;
-    private float mFocusY = 0.f;  
+    private float mPreFocusY = 0.f;
+    private float mFocusY = 0.f;
 
     private ScaleGestureDetector mScaleDetector;
     private MoveGestureDetector mMoveDetector;
@@ -125,31 +130,39 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
 
         mScaleDetector.onTouchEvent(event);
         mMoveDetector.onTouchEvent(event);
+        float diffScal = Math.abs(mPreScaleFactor - mScaleFactor);
+        float diffY = Math.abs(mPreFocusY - mFocusY);
+        float diffX = Math.abs(mPreFocusX - mFocusX);
+        //Log.i(TAG, "diffScal = " + diffScal + ", preSeatWidth = " + preSeatWidth + ", diffY ＝ " + diffY + ", diffX = " + diffX);
+        if (!eatClick || diffY > 5 || diffX > 5 || diffScal > 0.01) {//减少绘制次数
+            mMatrix.reset();
+            mPreScaleFactor = mScaleFactor;
+            mPreFocusY = mFocusY;
+            mPreFocusX = mFocusX;
+            //限定移动区域
+            minLeft = (int) (defWidth * mScaleFactor * maxColumn) - screenWidth;
+            mFocusX = minLeft > 0 ?
+                    Math.max(-minLeft, Math.min(mFocusX, defWidth * mScaleFactor))
+                    : Math.max(0, Math.min(mFocusX, defWidth * mScaleFactor));
+            minTop = (int) (defWidth * mScaleFactor * maxRow) - seatTableView.getMeasuredHeight();
+            mFocusY = minTop > 0 ? Math.max(-minTop, Math.min(mFocusY, 0)) : 0;
+            mMatrix.postScale(mScaleFactor, mScaleFactor);
 
-        mMatrix.reset();
-        mMatrix.postScale(mScaleFactor, mScaleFactor);
-        //限定移动区域
-        minLeft = (int)(defWidth * mScaleFactor * maxColumn) - screenWidth;
-        mFocusX = minLeft > 0 ?
-                Math.max(-minLeft, Math.min(mFocusX, defWidth * mScaleFactor))
-                : Math.max(0, Math.min(mFocusX, defWidth * mScaleFactor));
 
-        minTop = (int)(defWidth * mScaleFactor * maxRow) - seatTableView.getMeasuredHeight();
-        mFocusY = minTop > 0 ? Math.max(-minTop, Math.min(mFocusY, 0)) : 0;
-
-        seatTableView.mScaleFactor = mScaleFactor;
-        seatTableView.mPosX = mFocusX;
-        seatTableView.mPosY = mFocusY;
-        //重新绘制
-        int seatWidth = (int) (defWidth * mScaleFactor);
-        // 可购买座位
-        seatTableView.seat_sale = createScaledBitmap(seatTableView.SeatSale, seatWidth, seatWidth, true);
-        // 红色 已售座位
-        seatTableView.seat_sold = createScaledBitmap(seatTableView.SeatSold, seatWidth, seatWidth, true);
-        // 绿色 我的选择
-        seatTableView.seat_selected = createScaledBitmap(seatTableView.SeatSelected, seatWidth, seatWidth, true);
-        seatTableView.invalidate();
-        onChanged();
+            seatTableView.mScaleFactor = mScaleFactor;
+            seatTableView.mPosX = mFocusX;
+            seatTableView.mPosY = mFocusY;
+            //重新绘制
+            int seatWidth = (int) (defWidth * mScaleFactor);
+            // 可购买座位
+            seatTableView.seat_sale = createScaledBitmap(seatTableView.SeatSale, seatWidth, seatWidth, true);
+            // 红色 已售座位
+            seatTableView.seat_sold = createScaledBitmap(seatTableView.SeatSold, seatWidth, seatWidth, true);
+            // 绿色 我的选择
+            seatTableView.seat_selected = createScaledBitmap(seatTableView.SeatSelected, seatWidth, seatWidth, true);
+            seatTableView.invalidate();
+            onChanged();
+        }
 
 		return true;
 	}
