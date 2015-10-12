@@ -48,7 +48,7 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
     LinearLayout rowView;
     private SeatMo[][] seatTable;
 
-    public List<SeatMo> selectedSeats;// 保存选中座位
+    public List<SeatMo> selectedSeats;  // 保存选中座位
 
     private int screenWidth;
     private int minLeft;
@@ -65,14 +65,13 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
         defWidth = resources.getDimensionPixelSize(R.dimen.padding_20dp);
 
         initSeatTable();
-        selectedSeats = new ArrayList<SeatMo>();
+        selectedSeats = new ArrayList<>();
         seatTableView = (SeatTableView) findViewById(R.id.seatviewcont);
         rowView = (LinearLayout) findViewById(R.id.seatraw);
         //设置透明度
         alpha = new AlphaAnimation(0.6F, 0.6F);
-        alpha.setDuration(0); // Make animation instant
-        alpha.setFillAfter(true); // Tell it to persist after the animation ends
-
+        alpha.setDuration(0);       // Make animation instant
+        alpha.setFillAfter(true);   // Tell it to persist after the animation ends
 
         //居中线的画笔
         Paint paint = new Paint();
@@ -167,16 +166,17 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
 		return true;
 	}
 
-    //左侧的座位列号
+    // 左侧的座位列号
     public void onChanged() {
         rowView.removeAllViews();
-        rowView.setPadding(getResources().getDimensionPixelSize(R.dimen.padding_1dp),
-                (int) (mFocusY), 0, 0);//上下移动
+        rowView.setPadding(getResources().getDimensionPixelSize(R.dimen.padding_1dp),(int) (mFocusY), 0, 0);//上下移动
+
         //rowView.setBackgroundColor(getResources().getColor(R.color.black));
 //        rowView.startAnimation(alpha);
+
         for (int i = 0; i < seatTableView.getRowSize(); i++) {
             TextView textView = new TextView(SelectMovieSeatActivity.this);
-            //座位有可能为空
+            // 座位有可能为空
             for (int j = 0; j < seatTableView.getColumnSize(); j++) {
                 if (seatTable[i][j] != null) {
                     textView.setText(seatTable[i][j].rowName);
@@ -188,25 +188,20 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
             textView.setGravity(Gravity.CENTER);
             textView.setLayoutParams(new ViewGroup.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, (int)(defWidth * mScaleFactor)));
-            textView.setPadding(getResources().getDimensionPixelSize(R.dimen.padding_2dp), 0,
-                    getResources().getDimensionPixelSize(R.dimen.padding_2dp), 0);
+            textView.setPadding(getResources().getDimensionPixelSize(R.dimen.padding_2dp), 0, getResources().getDimensionPixelSize(R.dimen.padding_2dp), 0);
             rowView.addView(textView);
         }
     }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-		@Override
 		public boolean onScale(ScaleGestureDetector detector) {
-			mScaleFactor *= detector.getScaleFactor(); // scale change since previous event
+			mScaleFactor *= detector.getScaleFactor();      // scale change since previous event
 			mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 6.0f));
-
 			return true;
 		}
 	}
 
-	
 	private class MoveListener extends MoveGestureDetector.SimpleOnMoveGestureListener {
-		@Override
 		public boolean onMove(MoveGestureDetector detector) {
 			PointF d = detector.getFocusDelta();
             eatClick = d.x > 1 || d.y > 1;
@@ -217,9 +212,8 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
 		}
 	}
 
-
-    private int maxRow = 26;
-    private int maxColumn = 60;
+    private int maxRow = 16;
+    private int maxColumn = 30;
     private void initSeatTable() {
         seatTable = new SeatMo[maxRow][maxColumn];// mock data
         for (int i = 0; i < maxRow; i++) {
@@ -236,9 +230,7 @@ public class SelectMovieSeatActivity extends Activity implements OnTouchListener
     }
 
     public  int randInt(int min, int max) {
-
         Random rand = new Random();
-
         return rand.nextInt((max - min) + 1) + min;
     }
 

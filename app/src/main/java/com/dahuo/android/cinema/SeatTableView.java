@@ -16,30 +16,29 @@ import static android.graphics.Bitmap.createScaledBitmap;
  * @author YanLu
  */
 public class SeatTableView extends View {
+
     Bitmap seat_sale, seat_sold, seat_selected;
     Bitmap SeatSale, SeatSold, SeatSelected;
 
-    private int seatWidth;//座位图的宽,长宽相同
-    private int defWidth;//初始值
+    private int seatWidth;  // 座位图的宽, 长宽相同
+    private int defWidth;   // 初始值
 
-    //放大率和移动位置
+    // 放大率和移动位置
     public float mScaleFactor = 1.f;
     public float mPosX = .0f;
     public float mPosY = .0f;
-
 
     private SeatMo[][] seatTable;
     private int rowSize;
     private int columnSize;
 
-    private Paint linePaint;//中央线的绘制
+    private Paint linePaint;    // 中央线的绘制
 
     int width;
     int height;
 
     public SeatTableView(Context context) {
         super(context, null);
-
     }
 
     public SeatTableView(Context context, AttributeSet attr) {
@@ -120,10 +119,7 @@ public class SeatTableView extends View {
                 }
             }
         }
-
     }
-
-
 
     public void setSeatTable(SeatMo[][] seatTable) {
         this.seatTable = seatTable;
@@ -144,7 +140,6 @@ public class SeatTableView extends View {
     public void setColumnSize(int columnSize) {
         this.columnSize = columnSize;
     }
-
 
     public void setLinePaint(Paint linePaint) {
         this.linePaint = linePaint;
